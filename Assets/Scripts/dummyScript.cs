@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class dummy : MonoBehaviour {
+public class dummyScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
