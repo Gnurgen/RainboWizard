@@ -20,8 +20,6 @@ public class Teleport : MonoBehaviour {
 
 	public void UseAbility(Vector3 target){
 		if(internalCooldown <= 0){
-			Vector3 mousepos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-			mousepos = new Vector3 (mousepos.x, mousepos.y, -1);
 
 			if (Vector2.Distance (transform.position, target) < range) {
 				transform.position = target;

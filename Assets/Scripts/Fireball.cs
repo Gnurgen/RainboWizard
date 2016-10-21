@@ -7,6 +7,7 @@ public class Fireball : MonoBehaviour {
 	public float cooldown;
 	public float speed;
 	public float lifeTime;
+	public float damage;
 
 	private float internalCooldown;
 
@@ -23,7 +24,7 @@ public class Fireball : MonoBehaviour {
 	public void UseAbility(Vector3 target){
 		if(internalCooldown <= 0){
 			GameObject shot = Instantiate (fireballPrefab) as GameObject;
-			shot.GetComponent<FireballController> ().fire (gameObject, target, speed, lifeTime);
+			shot.GetComponent<FireballController> ().fire (gameObject, target, speed, lifeTime, damage);
 
 			internalCooldown = cooldown;
 		}

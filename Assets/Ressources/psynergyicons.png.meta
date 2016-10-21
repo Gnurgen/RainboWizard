@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: c71eedb679310e7448a7e56efbf2d1d4
-timeCreated: 1476837661
+timeCreated: 1477010761
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -33,7 +33,7 @@ TextureImporter:
     21300052: psynergyicons_26
     21300054: psynergyicons_27
     21300056: psynergyicons_28
-    21300058: psynergyicons_29
+    21300058: fireball
     21300060: psynergyicons_30
     21300062: psynergyicons_31
     21300064: psynergyicons_32
@@ -108,8 +108,8 @@ TextureImporter:
     21300202: psynergyicons_101
     21300204: psynergyicons_102
     21300206: psynergyicons_103
-    21300208: psynergyicons_104
-    21300210: psynergyicons_105
+    21300208: Monster1
+    21300210: Hero
     21300212: psynergyicons_106
     21300214: psynergyicons_107
     21300216: psynergyicons_108
@@ -677,13 +677,13 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: psynergyicons_29
+      name: fireball
       rect:
         serializedVersion: 2
-        x: 72
-        y: 417.89474
-        width: 24.153847
-        height: 26.105263
+        x: 81
+        y: 420
+        width: 22
+        height: 20
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1652,26 +1652,26 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: psynergyicons_104
+      name: Monster1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 261.89474
-        width: 24.153847
-        height: 26.105263
+        x: 2
+        y: 262
+        width: 24
+        height: 24
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: psynergyicons_105
+      name: Hero
       rect:
         serializedVersion: 2
-        x: 24
-        y: 261.89474
-        width: 24.153847
-        height: 26.105263
+        x: 29
+        y: 263
+        width: 22
+        height: 22
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1684,9 +1684,9 @@ TextureImporter:
         x: 48
         y: 261.89474
         width: 24.153847
-        height: 26.105263
+        height: 26.105255
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0.5, y: 0.5000006}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

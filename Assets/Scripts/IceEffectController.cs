@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EffectController : MonoBehaviour {
+public class IceEffectController : MonoBehaviour {
 
 	public float speed;
 	private bool started;
-	public float lifeTime;
 	private Vector3 direction;
+	private Vector3 initialPosition;
+	private float range;
 
 	// Use this for initialization
 	void Start () {
@@ -16,16 +17,17 @@ public class EffectController : MonoBehaviour {
 	void Update () {
 		if(started){
 			transform.position = transform.position + (direction * speed * Time.deltaTime);
-			lifeTime = lifeTime - Time.deltaTime;
-			if(lifeTime < 0){
+			if(Vector3.Distance(transform.position, initialPosition) > range){
 				Destroy (gameObject);
 			}
 		}
 	}
 
-	public void setPositionDirection(Vector3 pos, Vector3 dir){
+	public void setPositionDirection(Vector3 pos, Vector3 dir, float range){
 		transform.position = pos;
+		initialPosition = pos;
 		direction = dir;
+		this.range = range;
 		started = true;
 	}
 }
