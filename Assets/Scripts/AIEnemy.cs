@@ -2,8 +2,15 @@
 using System.Collections;
 
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(AbilityManager))]
 public class AIEnemy : MonoBehaviour
 {
+    public enum EnemyType
+    {
+        None,
+        Melee,
+        Ranged
+    }
     public enum State
     {
         Idle,
@@ -14,8 +21,11 @@ public class AIEnemy : MonoBehaviour
     };
 
     public State state;
+    public EnemyType enemyType;
 
     private CharacterController controller;
+    private AbilityManager abilityManager;
+
     private Transform playerTransform;
 
     private bool isRunning;
@@ -26,6 +36,7 @@ public class AIEnemy : MonoBehaviour
     private float cooldownTimer;
     //---
 
+    // Note: It would be cleaner code to have Heal as a seperate script.
     private float healCooldown;
     private float healTimer;
 
@@ -34,8 +45,10 @@ public class AIEnemy : MonoBehaviour
     private float turnSpeed = 5f;
     private float rotationMargin = 1f;
 
-    public float chaseDistance = 20.0f;
-    public float attackDistance = 2.0f;
+    public float chaseDistance;
+    public float attackDistance;
+    //Buffer to movement; mob will move a slight bit closer than chase distance, allowing the mob to attack even if the player makes minor movement.
+    public float wiggleDistance;
 
     public int maxHealth = 20;
     public int currentHealth;
@@ -45,15 +58,37 @@ public class AIEnemy : MonoBehaviour
 
     void Awake()
     {
+        //Variables.
+        chaseDistance = 20.0f;
         healTimer = 1f;
         healCooldown = 1f;
-        controller = GetComponent<CharacterController>();
-
+        directionOnCooldown = false;
+        currentHealth = maxHealth;
         state = State.Idle;
 
-        directionOnCooldown = false;
+        if (enemyType == EnemyType.Melee) {
+            attackDistance = 2.0f;
+            var ability = transform.gameObject.AddComponent<MeleeAbility>();
+            ability.damage = 5f;
+            ability.cooldown = 2f;
+            ability.range = attackDistance;
+        } else if (enemyType == EnemyType.Ranged) {
+            attackDistance = chaseDistance;
+            var ability = transform.gameObject.AddComponent<FireballAbility>();
+            ability.damage = 5f;
+            ability.cooldown = 2f;
+            ability.range = attackDistance;
+        } else {
+            enemyType = EnemyType.None;
+            attackDistance = 0;
+        }
+
+        wiggleDistance = attackDistance / 3;
+
+        //Components
+        controller = GetComponent<CharacterController>();
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-        currentHealth = maxHealth;
+        abilityManager = GetComponent<AbilityManager>();
     }
 
     void Update()
@@ -75,9 +110,17 @@ public class AIEnemy : MonoBehaviour
             if (Vector3.Distance(transform.position, playerPosition) < chaseDistance)
             {
                 // [Chase] If within the player's radius and not low on health.
-                if (Vector3.Distance(transform.position, playerPosition) > attackDistance)
+                if (Vector3.Distance(transform.position, playerPosition) > attackDistance && state == State.Attacking)
                 {
                     state = State.Chasing;
+                }
+                else if (Vector3.Distance(transform.position, playerPosition) > (attackDistance - wiggleDistance))
+                {
+                    //Allow some wiggle room to continue attacking the player, even if it starts moving.
+                    if (state != State.Attacking)
+                    {
+                        state = State.Chasing;
+                    }
                 }
                 // [Attack] If close to the player.
                 else
@@ -116,6 +159,9 @@ public class AIEnemy : MonoBehaviour
         {
             //Attacking logic.
             RotateTowards(playerTransform.position);
+            abilityManager.attack(playerTransform.gameObject);
+            Debug.Log("Attacking.");
+
         }
         else if (state == State.Healing)
         {

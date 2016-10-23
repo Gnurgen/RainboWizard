@@ -3,10 +3,10 @@ using System.Collections;
 
 public class AbilityManager : MonoBehaviour {
 
-	private MeleeAbility melee;
-	private FireballAbility fireball;
-	private MassFireballAbility massFireball;
-	private TeleportAbility teleport;
+	public MeleeAbility melee;
+    public FireballAbility fireball;
+    public MassFireballAbility massFireball;
+    public TeleportAbility teleport;
 
 	private float targetDist;
 

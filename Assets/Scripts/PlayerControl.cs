@@ -12,7 +12,7 @@ public class PlayerControl : MonoBehaviour {
 
 	// Used for movement
 	private float newX;
-	private float newY;
+	private float newZ;
 
 	private FireballAbility fireballAbility;
 	private MassFireballAbility massFireballAbility;
@@ -32,20 +32,20 @@ public class PlayerControl : MonoBehaviour {
 
 		// Player movement
 		newX = transform.position.x;
-		newY = transform.position.y;
+		newZ = transform.position.z;
 		if(Input.GetKey("w")){
-			newY += speed * Time.deltaTime;
+			newZ += speed * Time.deltaTime;
 		}
 		if(Input.GetKey("a")){
 			newX -= speed * Time.deltaTime;
 		}
 		if(Input.GetKey("s")){
-			newY -= speed * Time.deltaTime;
+			newZ -= speed * Time.deltaTime;
 		}
 		if(Input.GetKey("d")){
 			newX += speed * Time.deltaTime;
 		}
-		transform.position = new Vector3 (newX, newY, -1);
+		transform.position = new Vector3 (newX, 0, newZ);
 
 		// Facing the mouse
 		Vector3 dir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
