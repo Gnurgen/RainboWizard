@@ -3,13 +3,15 @@ using System.Collections;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(AbilityManager))]
-public class AIEnemy : MonoBehaviour
+
+public class AIBoss : MonoBehaviour
 {
-    public enum EnemyType
+    public enum BossAbilities
     {
         None,
-        Melee,
-        Ranged
+        One,
+        Two,
+        Three
     }
     public enum State
     {
@@ -21,7 +23,7 @@ public class AIEnemy : MonoBehaviour
     };
 
     public State state;
-    public EnemyType enemyType;
+    public BossAbilities bossAbilities;
 
     private CharacterController controller;
     private AbilityManager abilityManager;
@@ -35,48 +37,61 @@ public class AIEnemy : MonoBehaviour
     //---
 
     // Note: It would be cleaner code to have Heal as a seperate script.
-    private float healCooldown = 1f;
-    private float healTimer = 1f;
+    private float healCooldown;
+    private float healTimer;
 
     private float walkSpeed = 3f;
     private float runSpeed = 7f;
     private float turnSpeed = 5f;
     private float rotationMargin = 1f;
 
-    public float chaseDistance = 50;
-    public float attackDistance = 2;
+    public float chaseDistance;
+    public float attackDistance;
     //Buffer to movement; mob will move a slight bit closer than chase distance, allowing the mob to attack even if the player makes minor movement.
     public float wiggleDistance;
 
-    private int maxHealth = 20;
-    private int currentHealth;
-    private int lowHealth = 0;
+    public int maxHealth = 20;
+    public int currentHealth;
+    public int lowHealth = 10;
 
     private Vector3 runPosition;
-
     void Awake()
     {
         //Variables.
+        chaseDistance = 20.0f;
         healTimer = 1f;
         healCooldown = 1f;
         directionOnCooldown = false;
         currentHealth = maxHealth;
         state = State.Idle;
 
-        if (enemyType == EnemyType.Melee) {
+        if (bossAbilities == BossAbilities.One)
+        {
             attackDistance = 2.0f;
             var ability = transform.gameObject.AddComponent<MeleeAbility>();
             ability.damage = 5f;
             ability.cooldown = 2f;
             ability.range = attackDistance;
-        } else if (enemyType == EnemyType.Ranged) {
-            attackDistance = chaseDistance/5;
+        }
+        else if (bossAbilities == BossAbilities.Two)
+        {
+            attackDistance = chaseDistance/4;
             var ability = transform.gameObject.AddComponent<FireballAbility>();
             ability.damage = 5f;
             ability.cooldown = 2f;
             ability.range = attackDistance;
-        } else {
-            enemyType = EnemyType.None;
+        }
+        else if (bossAbilities == BossAbilities.Two)
+        {
+            attackDistance = chaseDistance;
+            var ability = transform.gameObject.AddComponent<FireballAbility>();
+            ability.damage = 5f;
+            ability.cooldown = 2f;
+            ability.range = attackDistance;
+        }
+        else
+        {
+            bossAbilities = BossAbilities.None;
             attackDistance = 0;
         }
 
@@ -157,6 +172,7 @@ public class AIEnemy : MonoBehaviour
             //Attacking logic.
             RotateTowards(playerTransform.position);
             abilityManager.attack(playerTransform.gameObject);
+            Debug.Log("Attacking.");
 
         }
         else if (state == State.Healing)
