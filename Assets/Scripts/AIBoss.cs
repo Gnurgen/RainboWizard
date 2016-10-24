@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(AbilityManager))]
-
 public class AIBoss : MonoBehaviour
 {
     public enum BossAbilities
@@ -18,7 +18,6 @@ public class AIBoss : MonoBehaviour
         Idle,
         Chasing,
         Attacking,
-        Fleeing,
         Healing
     };
 
@@ -27,7 +26,6 @@ public class AIBoss : MonoBehaviour
 
     private CharacterController controller;
     private AbilityManager abilityManager;
-
     private Transform playerTransform;
 
     //Used to limit how often rotation is changed, for fewer calls and less erratic running.
@@ -37,28 +35,34 @@ public class AIBoss : MonoBehaviour
     //---
 
     // Note: It would be cleaner code to have Heal as a seperate script.
-    private float healCooldown;
-    private float healTimer;
-
     private float walkSpeed = 3f;
     private float runSpeed = 7f;
     private float turnSpeed = 5f;
     private float rotationMargin = 1f;
 
-    public float chaseDistance;
-    public float attackDistance;
+    [Range(20f, 100f)]
+    public float chaseDistance = 60f;
+    private float attackDistance;
     //Buffer to movement; mob will move a slight bit closer than chase distance, allowing the mob to attack even if the player makes minor movement.
     public float wiggleDistance;
 
-    public int maxHealth = 20;
-    public int currentHealth;
-    public int lowHealth = 10;
+    private int maxHealth = 20;
+    private int currentHealth;
+    private int lowHealth = 10;
+
+    private float healCooldown = 1f;
+    private float healTimer = 1f;
 
     private Vector3 runPosition;
+
+    private FireballAbility fireball;
+    private MassFireballAbility massFireball;
+    private IceMineAbility icemine;
+    private TeleportAbility teleport;
+
     void Awake()
     {
         //Variables.
-        chaseDistance = 20.0f;
         healTimer = 1f;
         healCooldown = 1f;
         directionOnCooldown = false;
@@ -67,33 +71,61 @@ public class AIBoss : MonoBehaviour
 
         if (bossAbilities == BossAbilities.One)
         {
-            attackDistance = 2.0f;
-            var ability = transform.gameObject.AddComponent<MeleeAbility>();
-            ability.damage = 5f;
-            ability.cooldown = 2f;
-            ability.range = attackDistance;
+            attackDistance = chaseDistance / 4;
+
+            massFireball = transform.gameObject.AddComponent<MassFireballAbility>();
+            massFireball.damage = 10f;
+            massFireball.cooldown = 2f;
+            massFireball.range = attackDistance;
+            massFireball.prefab = Resources.Load("Fireball") as GameObject;
         }
         else if (bossAbilities == BossAbilities.Two)
         {
             attackDistance = chaseDistance/4;
-            var ability = transform.gameObject.AddComponent<FireballAbility>();
-            ability.damage = 5f;
-            ability.cooldown = 2f;
-            ability.range = attackDistance;
+
+            massFireball = transform.gameObject.AddComponent<MassFireballAbility>();
+            massFireball.damage = 10f;
+            massFireball.cooldown = 2f;
+            massFireball.range = attackDistance;
+            massFireball.prefab = Resources.Load("Fireball") as GameObject;
+
+            icemine = transform.gameObject.AddComponent<IceMineAbility>();
+            icemine.damage = 10f;
+            icemine.cooldown = 2f;
+            icemine.range = attackDistance;
+            icemine.minePrefab = Resources.Load("Mine") as GameObject;
         }
-        else if (bossAbilities == BossAbilities.Two)
+        else if (bossAbilities == BossAbilities.Three)
         {
-            attackDistance = chaseDistance;
-            var ability = transform.gameObject.AddComponent<FireballAbility>();
-            ability.damage = 5f;
-            ability.cooldown = 2f;
-            ability.range = attackDistance;
+            attackDistance = chaseDistance / 4;
+
+            massFireball = transform.gameObject.AddComponent<MassFireballAbility>();
+            massFireball.damage = 10f;
+            massFireball.cooldown = 2f;
+            massFireball.range = attackDistance;
+            massFireball.prefab = Resources.Load("Fireball") as GameObject;
+
+            icemine = transform.gameObject.AddComponent<IceMineAbility>();
+            icemine.damage = 10f;
+            icemine.cooldown = 2f;
+            icemine.range = attackDistance;
+            icemine.minePrefab = Resources.Load("Mine") as GameObject;
+
+            teleport = transform.gameObject.AddComponent<TeleportAbility>();
+            teleport.cooldown = 1f;
+            teleport.range = attackDistance;
         }
         else
         {
             bossAbilities = BossAbilities.None;
             attackDistance = 0;
         }
+
+        fireball = transform.gameObject.AddComponent<FireballAbility>();
+        fireball.damage = 5f;
+        fireball.cooldown = 1f;
+        fireball.prefab = Resources.Load("Fireball") as GameObject;
+        fireball.range = attackDistance;
 
         wiggleDistance = attackDistance / 3;
 
@@ -107,13 +139,8 @@ public class AIBoss : MonoBehaviour
     {
         Vector3 playerPosition = playerTransform.position;
 
-        // [Flee] If within the player's radius and low on health.
-        if (Vector3.Distance(transform.position, playerTransform.position) <= chaseDistance && currentHealth <= lowHealth)
-        {
-            state = State.Fleeing;
-        }
         // [Heal] If outside the player's radius and under max health.
-        else if (Vector3.Distance(transform.position, playerTransform.position) > chaseDistance && currentHealth < maxHealth)
+        if (Vector3.Distance(transform.position, playerTransform.position) > chaseDistance && currentHealth < maxHealth)
         {
             state = State.Healing;
         }
@@ -160,12 +187,13 @@ public class AIBoss : MonoBehaviour
             //Chasing logic.
             RotateTowards(playerTransform.position);
             controller.SimpleMove(transform.forward * walkSpeed);
-        }
-        else if (state == State.Fleeing)
-        {
-            //Fleeing logic.
-            RotateAwayFrom(runPosition);
-            controller.SimpleMove(transform.forward * runSpeed);
+            if (teleport != null)
+            {
+                if(Vector3.Distance(transform.position, playerTransform.position) > (teleport.range + attackDistance))
+                {
+                    teleport.UseAbility(playerTransform.position);
+                }
+            }
         }
         else if (state == State.Attacking)
         {
@@ -213,7 +241,6 @@ public class AIBoss : MonoBehaviour
         else if (directionOnCooldown)
         {
             if (cooldownTimer < Time.deltaTime)
-                ;
             {
                 directionOnCooldown = false;
             }

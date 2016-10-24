@@ -25,7 +25,6 @@ public class AIEnemy : MonoBehaviour
 
     private CharacterController controller;
     private AbilityManager abilityManager;
-
     private Transform playerTransform;
 
     //Used to limit how often rotation is changed, for fewer calls and less erratic running.
@@ -35,22 +34,23 @@ public class AIEnemy : MonoBehaviour
     //---
 
     // Note: It would be cleaner code to have Heal as a seperate script.
-    private float healCooldown = 1f;
-    private float healTimer = 1f;
-
     private float walkSpeed = 3f;
     private float runSpeed = 7f;
     private float turnSpeed = 5f;
     private float rotationMargin = 1f;
 
-    public float chaseDistance = 50;
-    public float attackDistance = 2;
+    [Range(20f, 100f)]
+    public float chaseDistance = 50f;
+    private float attackDistance;
     //Buffer to movement; mob will move a slight bit closer than chase distance, allowing the mob to attack even if the player makes minor movement.
     public float wiggleDistance;
 
     private int maxHealth = 20;
     private int currentHealth;
-    private int lowHealth = 0;
+    private int lowHealth = 10;
+
+    private float healCooldown = 1f;
+    private float healTimer = 1f;
 
     private Vector3 runPosition;
 
@@ -63,19 +63,24 @@ public class AIEnemy : MonoBehaviour
         currentHealth = maxHealth;
         state = State.Idle;
 
-        if (enemyType == EnemyType.Melee) {
+        if (enemyType == EnemyType.Melee)
+        {
             attackDistance = 2.0f;
             var ability = transform.gameObject.AddComponent<MeleeAbility>();
             ability.damage = 5f;
             ability.cooldown = 2f;
             ability.range = attackDistance;
-        } else if (enemyType == EnemyType.Ranged) {
-            attackDistance = chaseDistance/5;
+        }
+        else if (enemyType == EnemyType.Ranged) {
+            attackDistance = chaseDistance / 4;
             var ability = transform.gameObject.AddComponent<FireballAbility>();
             ability.damage = 5f;
             ability.cooldown = 2f;
             ability.range = attackDistance;
-        } else {
+            ability.prefab = Resources.Load("Fireball") as GameObject;
+        }
+        else
+        {
             enemyType = EnemyType.None;
             attackDistance = 0;
         }
@@ -157,6 +162,7 @@ public class AIEnemy : MonoBehaviour
             //Attacking logic.
             RotateTowards(playerTransform.position);
             abilityManager.attack(playerTransform.gameObject);
+            Debug.Log("Attacking.");
 
         }
         else if (state == State.Healing)
