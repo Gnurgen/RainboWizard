@@ -31,7 +31,7 @@ public class FireballControl : MonoBehaviour {
 		startPos = owner.transform.position;
 		transform.position = owner.transform.position;
 
-		// Calculate the direction to manually move in, and ensure z is not changed when moving;
+		// Calculate the direction to manually move in, and ensure y is not changed when moving;
 		dir = target - owner.transform.position;
 		dir = Vector3.Normalize (dir);
 		dir = new Vector3 (dir.x, 0, dir.z);
