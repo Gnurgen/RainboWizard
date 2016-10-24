@@ -24,7 +24,7 @@ public class FireballAbility : MonoBehaviour {
 	public void UseAbility(Vector3 target){
 		if(currentCooldown < 0){
 			GameObject fireball = Instantiate (prefab) as GameObject;
-			fireball.GetComponent<FireballControl> ().SetParameters (gameObject,target, damage, range, speed);
+			fireball.GetComponent<FireballControl> ().SetParameters (gameObject, new Vector3(target.x, 0, target.z), damage, range, speed);
 			currentCooldown = cooldown;
 		}
 	}

@@ -16,14 +16,14 @@ public class PlayerControl : MonoBehaviour {
 
 	private FireballAbility fireballAbility;
 	private MassFireballAbility massFireballAbility;
-
+	private IceMineAbility iceMineAbility;
 	private TeleportAbility teleportAbility;
 
 	// Use this for initialization
 	void Start () {
 		fireballAbility = GetComponent<FireballAbility> ();
 		massFireballAbility = GetComponent<MassFireballAbility> ();
-
+		iceMineAbility = GetComponent<IceMineAbility> ();
 		teleportAbility = GetComponent<TeleportAbility> ();
 	}
 	
@@ -48,9 +48,6 @@ public class PlayerControl : MonoBehaviour {
 		transform.position = new Vector3 (newX, 0, newZ);
 
 		// Facing the mouse
-		//Vector3 dir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-		//float angle = Mathf.Atan (dir.x, dir.z) * Mathf.Rad2Deg;
-		//transform.rotation = Quaternion.AngleAxis (angle-90, Vector3.forward);
 		Vector3 dir = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 		transform.LookAt (new Vector3 (dir.x, 0, dir.z));
 
@@ -60,6 +57,9 @@ public class PlayerControl : MonoBehaviour {
 		}
 		if(massFireballAbility != null && Input.GetKey(massFireballKey)){
 			massFireballAbility.UseAbility ();
+		}
+		if(iceMineAbility != null && Input.GetKey(iceMineKey)){
+			iceMineAbility.UseAbility (Camera.main.ScreenToWorldPoint (Input.mousePosition));
 		}
 		if(teleportAbility != null && Input.GetKey(teleportKey)){
 			teleportAbility.UseAbility (Camera.main.ScreenToWorldPoint(Input.mousePosition));

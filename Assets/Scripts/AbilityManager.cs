@@ -6,6 +6,7 @@ public class AbilityManager : MonoBehaviour {
 	public MeleeAbility melee;
     public FireballAbility fireball;
     public MassFireballAbility massFireball;
+	public IceMineAbility iceMine;
     public TeleportAbility teleport;
 
 	private float targetDist;
@@ -15,6 +16,7 @@ public class AbilityManager : MonoBehaviour {
 		melee = GetComponent<MeleeAbility> ();
 		fireball = GetComponent<FireballAbility> ();
 		massFireball = GetComponent<MassFireballAbility> ();
+		iceMine = GetComponent<IceMineAbility> ();
 		teleport = GetComponent<TeleportAbility> ();
 	}
 	
@@ -31,6 +33,9 @@ public class AbilityManager : MonoBehaviour {
 		}
 		if(fireball != null && targetDist < fireball.range){
 			fireball.UseAbility (target.transform.position);
+		}
+		if(iceMine != null && targetDist < iceMine.range){
+			iceMine.UseAbility (target.transform.position);
 		}
 	}
 }
