@@ -160,7 +160,6 @@ public class AIEnemy : MonoBehaviour
             //Attacking logic.
             RotateTowards(playerTransform.position);
             abilityManager.attack(playerTransform.gameObject);
-            Debug.Log("Attacking.");
 
         }
         else if (state == State.Healing)
