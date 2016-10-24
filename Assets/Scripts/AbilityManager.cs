@@ -34,6 +34,9 @@ public class AbilityManager : MonoBehaviour {
 		if(fireball != null && targetDist < fireball.range){
 			fireball.UseAbility (target.transform.position);
 		}
+		if(massFireball != null && targetDist < massFireball.range){
+			massFireball.UseAbility ();
+		}
 		if(iceMine != null && targetDist < iceMine.range){
 			iceMine.UseAbility (target.transform.position);
 		}
