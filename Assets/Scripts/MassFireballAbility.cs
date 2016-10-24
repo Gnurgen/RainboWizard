@@ -26,21 +26,21 @@ public class MassFireballAbility : MonoBehaviour {
 	public void UseAbility(){
 		if(currentCooldown < 0){
 			fireball = Instantiate (prefab) as GameObject;
-			fireball.GetComponent<FireballControl> ().SetParameters (gameObject, new Vector3( transform.position.x + 1, transform.position.y + 1, -1), damage, range, speed);
+			fireball.GetComponent<FireballControl> ().SetParameters (gameObject, new Vector3( transform.position.x + 1, 0, transform.position.z + 1), damage, range, speed);
 			fireball = Instantiate (prefab) as GameObject;
-			fireball.GetComponent<FireballControl> ().SetParameters (gameObject, new Vector3( transform.position.x - 1, transform.position.y + 1, -1), damage, range, speed);
+			fireball.GetComponent<FireballControl> ().SetParameters (gameObject, new Vector3( transform.position.x - 1, 0, transform.position.z + 1), damage, range, speed);
 			fireball = Instantiate (prefab) as GameObject;
-			fireball.GetComponent<FireballControl> ().SetParameters (gameObject, new Vector3( transform.position.x + 1, transform.position.y - 1, -1), damage, range, speed);
+			fireball.GetComponent<FireballControl> ().SetParameters (gameObject, new Vector3( transform.position.x + 1, 0, transform.position.z - 1), damage, range, speed);
 			fireball = Instantiate (prefab) as GameObject;
-			fireball.GetComponent<FireballControl> ().SetParameters (gameObject, new Vector3( transform.position.x - 1, transform.position.y - 1, -1), damage, range, speed);
+			fireball.GetComponent<FireballControl> ().SetParameters (gameObject, new Vector3( transform.position.x - 1, 0, transform.position.z - 1), damage, range, speed);
 			fireball = Instantiate (prefab) as GameObject;
-			fireball.GetComponent<FireballControl> ().SetParameters (gameObject, new Vector3( transform.position.x + 1, transform.position.y, -1), damage, range, speed);
+			fireball.GetComponent<FireballControl> ().SetParameters (gameObject, new Vector3( transform.position.x + 1, 0, transform.position.z), damage, range, speed);
 			fireball = Instantiate (prefab) as GameObject;
-			fireball.GetComponent<FireballControl> ().SetParameters (gameObject, new Vector3( transform.position.x - 1, transform.position.y, -1), damage, range, speed);
+			fireball.GetComponent<FireballControl> ().SetParameters (gameObject, new Vector3( transform.position.x - 1, 0, transform.position.z), damage, range, speed);
 			fireball = Instantiate (prefab) as GameObject;
-			fireball.GetComponent<FireballControl> ().SetParameters (gameObject, new Vector3( transform.position.x, transform.position.y - 1, -1), damage, range, speed);
+			fireball.GetComponent<FireballControl> ().SetParameters (gameObject, new Vector3( transform.position.x, 0, transform.position.z - 1), damage, range, speed);
 			fireball = Instantiate (prefab) as GameObject;
-			fireball.GetComponent<FireballControl> ().SetParameters (gameObject, new Vector3( transform.position.x, transform.position.y + 1, -1), damage, range, speed);
+			fireball.GetComponent<FireballControl> ().SetParameters (gameObject, new Vector3( transform.position.x, 0, transform.position.z + 1), damage, range, speed);
 			currentCooldown = cooldown;
 		}
 	}

@@ -48,9 +48,11 @@ public class PlayerControl : MonoBehaviour {
 		transform.position = new Vector3 (newX, 0, newZ);
 
 		// Facing the mouse
-		Vector3 dir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-		float angle = Mathf.Atan2 (dir.y, dir.x) * Mathf.Rad2Deg;
-		transform.rotation = Quaternion.AngleAxis (angle-90, Vector3.forward);
+		//Vector3 dir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+		//float angle = Mathf.Atan (dir.x, dir.z) * Mathf.Rad2Deg;
+		//transform.rotation = Quaternion.AngleAxis (angle-90, Vector3.forward);
+		Vector3 dir = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+		transform.LookAt (new Vector3 (dir.x, 0, dir.z));
 
 		// Abilities
 		if(fireballAbility != null && Input.GetMouseButtonDown(0)){
