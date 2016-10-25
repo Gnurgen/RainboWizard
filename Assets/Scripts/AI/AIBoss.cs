@@ -44,7 +44,7 @@ public class AIBoss : MonoBehaviour
     public float chaseDistance = 60f;
     private float attackDistance;
     //Buffer to movement; mob will move a slight bit closer than chase distance, allowing the mob to attack even if the player makes minor movement.
-    public float wiggleDistance;
+    private float wiggleDistance;
 
     private int maxHealth = 20;
     private int currentHealth;
@@ -60,6 +60,13 @@ public class AIBoss : MonoBehaviour
     private IceMineAbility icemine;
     private TeleportAbility teleport;
 
+    //public var
+    public float bossDamage = 10f;
+    [Range(0f, 2f)]
+    public float bossCooldown = 1f;
+    public float bossSpeed = 10f;
+    public float bossAoE = 2f;
+
     void Awake()
     {
         //Variables.
@@ -74,8 +81,9 @@ public class AIBoss : MonoBehaviour
             attackDistance = chaseDistance / 4;
 
             massFireball = transform.gameObject.AddComponent<MassFireballAbility>();
-            massFireball.damage = 10f;
-            massFireball.cooldown = 2f;
+            massFireball.damage = bossDamage * 5f;
+            massFireball.cooldown = bossCooldown;
+            massFireball.speed = bossSpeed;
             massFireball.range = attackDistance;
             massFireball.prefab = Resources.Load("Fireball") as GameObject;
         }
@@ -84,14 +92,17 @@ public class AIBoss : MonoBehaviour
             attackDistance = chaseDistance/4;
 
             massFireball = transform.gameObject.AddComponent<MassFireballAbility>();
-            massFireball.damage = 10f;
-            massFireball.cooldown = 2f;
+            massFireball.damage = bossDamage * 5f;
+            massFireball.cooldown = bossCooldown;
+            massFireball.speed = bossSpeed;
             massFireball.range = attackDistance;
             massFireball.prefab = Resources.Load("Fireball") as GameObject;
 
             icemine = transform.gameObject.AddComponent<IceMineAbility>();
-            icemine.damage = 10f;
-            icemine.cooldown = 2f;
+            icemine.damage = bossDamage;
+            icemine.cooldown = bossCooldown;
+            icemine.delay = bossSpeed;
+            icemine.explosionRange = bossAoE;
             icemine.range = attackDistance;
             icemine.minePrefab = Resources.Load("Mine") as GameObject;
         }
@@ -100,14 +111,17 @@ public class AIBoss : MonoBehaviour
             attackDistance = chaseDistance / 4;
 
             massFireball = transform.gameObject.AddComponent<MassFireballAbility>();
-            massFireball.damage = 10f;
-            massFireball.cooldown = 2f;
+            massFireball.damage = bossDamage * 5f;
+            massFireball.cooldown = bossCooldown;
+            massFireball.speed = bossSpeed;
             massFireball.range = attackDistance;
             massFireball.prefab = Resources.Load("Fireball") as GameObject;
 
             icemine = transform.gameObject.AddComponent<IceMineAbility>();
-            icemine.damage = 10f;
-            icemine.cooldown = 2f;
+            icemine.damage = bossDamage;
+            icemine.cooldown = bossCooldown;
+            icemine.delay = bossSpeed;
+            icemine.explosionRange = bossAoE;
             icemine.range = attackDistance;
             icemine.minePrefab = Resources.Load("Mine") as GameObject;
 
@@ -122,8 +136,9 @@ public class AIBoss : MonoBehaviour
         }
 
         fireball = transform.gameObject.AddComponent<FireballAbility>();
-        fireball.damage = 5f;
-        fireball.cooldown = 1f;
+        fireball.damage = bossDamage;
+        fireball.cooldown = bossCooldown;
+        fireball.speed = bossSpeed;
         fireball.prefab = Resources.Load("Fireball") as GameObject;
         fireball.range = attackDistance;
 

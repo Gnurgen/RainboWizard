@@ -4,14 +4,11 @@
 	{
 		_MainTex ("Texture", 2D) = "white" {}
 		_Speed ("Speed", float) = 1
+		_Colors ("Colors", float) = 2
 		_Fireball ("Fireball", color) = (1,1,1,1)
-		_FireballActive ("Fireball Active", int) = 0
 		_MassFireball ("Mass Fireball", color) = (1,1,1,1)
-		_MassFireballActive ("Mass Fireball Active", int) = 0
 		_IceMine ("Ice Mine", color) = (1,1,1,1)
-		_IceMineActive ("Ice Mine Active", int) = 0
 		_Teleport ("Teleport", color) = (1,1,1,1)
-		_TeleportActive ("Teleport Active", int) = 0
 	}
 	SubShader
 	{
@@ -36,6 +33,11 @@
 
 			sampler2D _MainTex;
 			float _Speed;
+			float _Colors;
+			fixed4 _Fireball;
+			fixed4 _MassFireball;
+			fixed4 _IceMine;
+			fixed4 _Teleport;
 
 			v2f vert (appdata v)
 			{
@@ -50,9 +52,22 @@
 			{
 				// This is where the "magic" happens
 				fixed4 col = tex2D(_MainTex, i.uv);
-				return fixed4((col.x + _Time.y) % _Speed / _Speed, (col.y + _Time.y) % _Speed / _Speed, (col.z + _Time.y) % _Speed / _Speed, 0);
-
-				//return col;
+				fixed4 blend = fixed4(1,1,1,1);
+				//return fixed4((col.x + _Time.y) % _Speed / _Speed, (col.y + _Time.y) % _Speed / _Speed, (col.z + _Time.y) % _Speed / _Speed, 0);
+				float choose = (_Time.y * _Speed) % _Colors;
+				if(choose >= 0 && choose <= 1){
+					blend = _Fireball;
+				}
+				else if (choose > 1 && choose <= 2){
+					blend = _MassFireball;
+				}
+				else if (choose > 2 && choose <= 3){
+					blend = _IceMine;
+				}
+				else if (choose > 3 && choose <= 4){
+					blend = _Teleport;
+				}
+				return atan2(blend, col);
 			}
 			ENDCG
 		}

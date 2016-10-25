@@ -43,7 +43,7 @@ public class AIEnemy : MonoBehaviour
     public float chaseDistance = 50f;
     private float attackDistance;
     //Buffer to movement; mob will move a slight bit closer than chase distance, allowing the mob to attack even if the player makes minor movement.
-    public float wiggleDistance;
+    private float wiggleDistance;
 
     private int maxHealth = 20;
     private int currentHealth;
@@ -53,6 +53,12 @@ public class AIEnemy : MonoBehaviour
     private float healTimer = 1f;
 
     private Vector3 runPosition;
+
+    //public var
+    public float enemyDamage = 5f;
+    [Range(0f, 2f)]
+    public float enemyCooldown = 2f;
+    public float enemySpeed = 5f;
 
     void Awake()
     {
@@ -67,15 +73,16 @@ public class AIEnemy : MonoBehaviour
         {
             attackDistance = 2.0f;
             var ability = transform.gameObject.AddComponent<MeleeAbility>();
-            ability.damage = 5f;
-            ability.cooldown = 2f;
+            ability.damage = enemyDamage;
+            ability.cooldown = enemyCooldown;
             ability.range = attackDistance;
         }
         else if (enemyType == EnemyType.Ranged) {
             attackDistance = chaseDistance / 4;
             var ability = transform.gameObject.AddComponent<FireballAbility>();
-            ability.damage = 5f;
-            ability.cooldown = 2f;
+            ability.damage = enemyDamage;
+            ability.cooldown = enemyCooldown;
+            ability.speed = enemySpeed;
             ability.range = attackDistance;
             ability.prefab = Resources.Load("Fireball") as GameObject;
         }
