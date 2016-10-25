@@ -59,6 +59,7 @@ public class AIEnemy : MonoBehaviour
     [Range(0f, 2f)]
     public float enemyCooldown = 2f;
     public float enemySpeed = 5f;
+    public float enemyAttackRange = 2f;
 
     void Awake()
     {
@@ -68,22 +69,21 @@ public class AIEnemy : MonoBehaviour
         directionOnCooldown = false;
         currentHealth = maxHealth;
         state = State.Idle;
+        attackDistance = enemyAttackRange;
 
         if (enemyType == EnemyType.Melee)
         {
-            attackDistance = 2.0f;
             var ability = transform.gameObject.AddComponent<MeleeAbility>();
             ability.damage = enemyDamage;
             ability.cooldown = enemyCooldown;
-            ability.range = attackDistance;
+            ability.range = enemyAttackRange;
         }
         else if (enemyType == EnemyType.Ranged) {
-            attackDistance = 10f;
             var ability = transform.gameObject.AddComponent<FireballAbility>();
             ability.damage = enemyDamage;
             ability.cooldown = enemyCooldown;
             ability.speed = enemySpeed;
-            ability.range = attackDistance;
+            ability.range = enemyAttackRange;
             ability.prefab = Resources.Load("Fireball") as GameObject;
         }
         else

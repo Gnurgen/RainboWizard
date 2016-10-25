@@ -25,7 +25,7 @@ public class TeleportAbility : MonoBehaviour {
 			}
 			else{
 				Vector3 direction = Vector3.Normalize(target - transform.position) * range;
-				direction = new Vector3 (direction.x, direction.y, -1);
+				direction = new Vector3 (direction.x, transform.position.y, direction.z);
 				transform.position = transform.position + direction;
 			}
 			currentCooldown = cooldown;

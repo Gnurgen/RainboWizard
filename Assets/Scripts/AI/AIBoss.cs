@@ -65,7 +65,9 @@ public class AIBoss : MonoBehaviour
     [Range(0f, 2f)]
     public float bossCooldown = 1f;
     public float bossSpeed = 10f;
+    public float bossDelay = 2f;
     public float bossAoE = 2f;
+    public float bossAttackRange = 10f;
 
     void Awake()
     {
@@ -75,59 +77,54 @@ public class AIBoss : MonoBehaviour
         directionOnCooldown = false;
         currentHealth = maxHealth;
         state = State.Idle;
+        attackDistance = bossAttackRange;
 
         if (bossAbilities == BossAbilities.One)
         {
-            attackDistance = chaseDistance / 4;
-
             massFireball = transform.gameObject.AddComponent<MassFireballAbility>();
             massFireball.damage = bossDamage;
             massFireball.cooldown = bossCooldown * 2;
             massFireball.speed = bossSpeed;
-            massFireball.range = attackDistance;
+            massFireball.range = bossAttackRange * 3;
             massFireball.prefab = Resources.Load("Fireball") as GameObject;
         }
         else if (bossAbilities == BossAbilities.Two)
         {
-            attackDistance = chaseDistance/4;
-
             massFireball = transform.gameObject.AddComponent<MassFireballAbility>();
             massFireball.damage = bossDamage;
             massFireball.cooldown = bossCooldown * 2;
             massFireball.speed = bossSpeed;
-            massFireball.range = attackDistance;
+            massFireball.range = bossAttackRange * 3;
             massFireball.prefab = Resources.Load("Fireball") as GameObject;
 
             icemine = transform.gameObject.AddComponent<IceMineAbility>();
             icemine.damage = bossDamage;
             icemine.cooldown = bossCooldown * 2;
-            icemine.delay = bossSpeed;
+            icemine.delay = bossDelay;
             icemine.explosionRange = bossAoE;
-            icemine.range = attackDistance;
+            icemine.range = bossAttackRange * 2;
             icemine.minePrefab = Resources.Load("Mine") as GameObject;
         }
         else if (bossAbilities == BossAbilities.Three)
         {
-            attackDistance = chaseDistance / 4;
-
             massFireball = transform.gameObject.AddComponent<MassFireballAbility>();
             massFireball.damage = bossDamage;
             massFireball.cooldown = bossCooldown * 2;
             massFireball.speed = bossSpeed;
-            massFireball.range = attackDistance;
+            massFireball.range = bossAttackRange * 3;
             massFireball.prefab = Resources.Load("Fireball") as GameObject;
 
             icemine = transform.gameObject.AddComponent<IceMineAbility>();
             icemine.damage = bossDamage;
             icemine.cooldown = bossCooldown * 2;
-            icemine.delay = bossSpeed;
+            icemine.delay = bossDelay;
             icemine.explosionRange = bossAoE;
-            icemine.range = attackDistance;
+            icemine.range = bossAttackRange * 2;
             icemine.minePrefab = Resources.Load("Mine") as GameObject;
 
             teleport = transform.gameObject.AddComponent<TeleportAbility>();
             teleport.cooldown = 1f;
-            teleport.range = attackDistance;
+            teleport.range = bossAttackRange;
         }
         else
         {
@@ -140,7 +137,7 @@ public class AIBoss : MonoBehaviour
         fireball.cooldown = bossCooldown;
         fireball.speed = bossSpeed;
         fireball.prefab = Resources.Load("Fireball") as GameObject;
-        fireball.range = attackDistance;
+        fireball.range = chaseDistance / 3;
 
         wiggleDistance = attackDistance / 3;
 

@@ -12,10 +12,10 @@ public class IceMineControl : MonoBehaviour {
 	private float currentDelay;
 	private GameObject shard;
 	private GameObject owner;
+	private bool exploded;
 
 	// Use this for initialization
 	void Start () {
-		currentDelay = 1;
 	}
 	
 	// Update is called once per frame
@@ -33,33 +33,39 @@ public class IceMineControl : MonoBehaviour {
 		this.damage = damage;
 		this.owner = owner;
 		currentDelay = delay;
+		exploded = false;
 	}
 
-	void Explode(){
-		Collider[] hits = Physics.OverlapSphere (transform.position, explosionRange);
-		for(int i = 0; i < hits.Length; i++){
-			if(hits[i].tag == "Monster" || hits[i].tag == "Player" && hits[i].gameObject != owner){
-				hits [i].GetComponent<Health> ().takeDamage (damage);
+	public void Explode(){
+		if (!exploded) {
+			exploded = true;
+			Collider[] hits = Physics.OverlapSphere (transform.position, explosionRange);
+			for (int i = 0; i < hits.Length; i++) {
+				if ((hits [i].tag == "Monster" || hits [i].tag == "Player") && hits [i].tag != owner.tag) {
+					hits [i].GetComponent<Health> ().takeDamage (damage);
+				} else if (hits [i].tag == "Mine") {
+					hits [i].GetComponent<IceMineControl> ().Explode ();
+				}
 			}
+
+			shard = Instantiate (shardPrefab) as GameObject;
+			shard.GetComponent<ShardControl> ().SetParameters (transform.position, new Vector3 (1, 0, 0), explosionRange);
+			shard = Instantiate (shardPrefab) as GameObject;
+			shard.GetComponent<ShardControl> ().SetParameters (transform.position, new Vector3 (0, 0, 1), explosionRange);
+			shard = Instantiate (shardPrefab) as GameObject;
+			shard.GetComponent<ShardControl> ().SetParameters (transform.position, new Vector3 (-1, 0, 0), explosionRange);
+			shard = Instantiate (shardPrefab) as GameObject;
+			shard.GetComponent<ShardControl> ().SetParameters (transform.position, new Vector3 (0, 0, -1), explosionRange);
+			shard = Instantiate (shardPrefab) as GameObject;
+			shard.GetComponent<ShardControl> ().SetParameters (transform.position, new Vector3 (1, 0, 1), explosionRange);
+			shard = Instantiate (shardPrefab) as GameObject;
+			shard.GetComponent<ShardControl> ().SetParameters (transform.position, new Vector3 (1, 0, -1), explosionRange);
+			shard = Instantiate (shardPrefab) as GameObject;
+			shard.GetComponent<ShardControl> ().SetParameters (transform.position, new Vector3 (-1, 0, 1), explosionRange);
+			shard = Instantiate (shardPrefab) as GameObject;
+			shard.GetComponent<ShardControl> ().SetParameters (transform.position, new Vector3 (-1, 0, -1), explosionRange);
+
+			Destroy (gameObject);
 		}
-
-		shard = Instantiate (shardPrefab) as GameObject;
-		shard.GetComponent<ShardControl> ().SetParameters (transform.position, new Vector3 (1, 0, 0), explosionRange);
-		shard = Instantiate (shardPrefab) as GameObject;
-		shard.GetComponent<ShardControl> ().SetParameters (transform.position, new Vector3 (0, 0, 1), explosionRange);
-		shard = Instantiate (shardPrefab) as GameObject;
-		shard.GetComponent<ShardControl> ().SetParameters (transform.position, new Vector3 (-1, 0, 0), explosionRange);
-		shard = Instantiate (shardPrefab) as GameObject;
-		shard.GetComponent<ShardControl> ().SetParameters (transform.position, new Vector3 (0, 0, -1), explosionRange);
-		shard = Instantiate (shardPrefab) as GameObject;
-		shard.GetComponent<ShardControl> ().SetParameters (transform.position, new Vector3 (1, 0, 1), explosionRange);
-		shard = Instantiate (shardPrefab) as GameObject;
-		shard.GetComponent<ShardControl> ().SetParameters (transform.position, new Vector3 (1, 0, -1), explosionRange);
-		shard = Instantiate (shardPrefab) as GameObject;
-		shard.GetComponent<ShardControl> ().SetParameters (transform.position, new Vector3 (-1, 0, 1), explosionRange);
-		shard = Instantiate (shardPrefab) as GameObject;
-		shard.GetComponent<ShardControl> ().SetParameters (transform.position, new Vector3 (-1, 0, -1), explosionRange);
-
-		Destroy (gameObject);
 	}
 }

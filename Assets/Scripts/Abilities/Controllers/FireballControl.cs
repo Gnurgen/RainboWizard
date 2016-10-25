@@ -38,7 +38,7 @@ public class FireballControl : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider col){
-		if(col.gameObject != owner){
+		if(col.gameObject.tag != owner.tag){
 			if(col.gameObject.tag == "Monster" || col.gameObject.tag == "Player"){
 				col.gameObject.GetComponent<Health> ().takeDamage (damage);
 				Destroy (gameObject);

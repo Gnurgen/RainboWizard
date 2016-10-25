@@ -23,7 +23,9 @@ public class GameManager : MonoBehaviour {
 
     private bool bossSpawned = false;
 
-    private AudioSource bossdieAudio;
+    private AudioSource gameManagerAudio;
+    public AudioClip dieClip;
+    public AudioClip killClip;
 
     public int nextLevel = 1;
 
@@ -31,7 +33,7 @@ public class GameManager : MonoBehaviour {
     // Use this for initialization
     void Awake()
     {
-        bossdieAudio = this.GetComponent<AudioSource>();
+        gameManagerAudio = GetComponent<AudioSource>();
         GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.SetFloat("_Colors", (nextLevel));
     }
 
@@ -80,7 +82,7 @@ public class GameManager : MonoBehaviour {
         }
         else if (bossSpawned != true)
         {
-            CreateRandomRanged();
+            CreateRandomMelee();
         }
         else
         {
@@ -91,7 +93,8 @@ public class GameManager : MonoBehaviour {
 	public void BossKilled(){
         // Won
         GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.SetFloat("_Colors", (nextLevel + 1));
-        bossdieAudio.Play();
+        gameManagerAudio.clip = killClip;
+        gameManagerAudio.Play();
         StartCoroutine("GoNextLevel");
 	}
 

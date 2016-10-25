@@ -9,10 +9,14 @@ public class Health : MonoBehaviour {
 	public float currentHealth;
 	private float currentRegenerationDelay;
 
+    private GameObject gameManager;
+    private AudioSource gameManagerAudioSource;
 
-	// Use this for initialization
-	void Start () {
-		currentHealth = health;
+    // Use this for initialization
+    void Start () {
+        gameManager = GameObject.FindGameObjectWithTag("GameManager");
+        gameManagerAudioSource = gameManager.GetComponent<AudioSource>();
+        currentHealth = health;
 		currentRegenerationDelay = 0;
 	}
 	
@@ -33,7 +37,19 @@ public class Health : MonoBehaviour {
 		currentHealth = currentHealth - damage;
 		currentRegenerationDelay = regenerationDelay;
 		if(currentHealth <= 0){
-			Destroy (gameObject);
-		}
+			if (this.gameObject.tag == "Player")
+            {
+                gameManagerAudioSource.clip = gameManager.GetComponent<GameManager>().dieClip;
+                gameManagerAudioSource.Play();
+                StartCoroutine("QuitGame");
+            }
+            Destroy(gameObject);
+        }
 	}
+
+    IEnumerator QuitGame()
+    {
+        yield return new WaitForSeconds(5);
+        Application.Quit();
+    }
 }
