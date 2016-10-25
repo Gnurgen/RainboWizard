@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -20,7 +21,20 @@ public class GameManager : MonoBehaviour {
 	private List<GameObject> rangedEnemies;
 	private GameObject bossInstance;
 
-	// Use this for initialization
+    private bool bossSpawned = false;
+
+    private AudioSource bossdieAudio;
+
+    public int nextLevel = 1;
+
+
+    // Use this for initialization
+    void Awake()
+    {
+        bossdieAudio = this.GetComponent<AudioSource>();
+        GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.SetFloat("_Colors", (nextLevel));
+    }
+
 	void Start () {
 		meleeEnemies = new List<GameObject> ();
 		rangedEnemies = new List<GameObject> ();
@@ -44,43 +58,58 @@ public class GameManager : MonoBehaviour {
 	public void RangedKilled(GameObject mob){
 		enemiesKilled += 1;
 		rangedEnemies.Remove (mob);
-		if(enemiesKilled >= enemiesToKill){
-			SpawnBoss ();
+		if(enemiesKilled == enemiesToKill)
+        {
+            SpawnBoss ();
 		}
-		else{
+		else if (bossSpawned != true){
 			CreateRandomRanged ();
 		}
+        else
+        {
+            //do nothing!
+        }
 	}
 
 	public void MeleeKilled(GameObject mob){
 		enemiesKilled += 1;
 		meleeEnemies.Remove (mob);
-		if(enemiesKilled >= enemiesToKill){
-			SpawnBoss ();
-		}
-		else{
-			CreateRandomMelee ();
-		}
-	}
+        if (enemiesKilled == enemiesToKill)
+        {
+            SpawnBoss();
+        }
+        else if (bossSpawned != true)
+        {
+            CreateRandomRanged();
+        }
+        else
+        {
+            //do nothing!
+        }
+    }
 
 	public void BossKilled(){
-		// Won
+        // Won
+        GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.SetFloat("_Colors", (nextLevel + 1));
+        bossdieAudio.Play();
+        StartCoroutine("GoNextLevel");
 	}
 
 	void CreateRandomMelee(){
 		GameObject newMob = Instantiate (melee) as GameObject;
-		newMob.transform.position = new Vector3 (Random.Range (-24f, 24f), 0, Random.Range (-24f, 24f));
+		newMob.transform.position = new Vector3 (Random.Range (-20f, 20f), 0, Random.Range (-20f, 20f));
 		meleeEnemies.Add (newMob);
 	}
 
 	void CreateRandomRanged(){
 		GameObject newMob = Instantiate (ranged) as GameObject;
-		newMob.transform.position = new Vector3 (Random.Range (-24f, 24f), 0, Random.Range (-24f, 24f));
+		newMob.transform.position = new Vector3(Random.Range(-20f, 20f), 0, Random.Range(-20f, 20f));
 		rangedEnemies.Add (newMob);
 	}
 
 	void SpawnBoss(){
-		bossInstance = Instantiate (ranged) as GameObject;
+        bossSpawned = true;
+		bossInstance = Instantiate (boss) as GameObject;
 		bossInstance.transform.position = new Vector3 (0, 0, 0);
 		KillAllMobs ();
 
@@ -94,4 +123,10 @@ public class GameManager : MonoBehaviour {
 			Destroy (rangedEnemies [i]);
 		}
 	}
+
+    IEnumerator GoNextLevel()
+    {
+        yield return new WaitForSeconds(5);
+        SceneManager.LoadScene(nextLevel);
+    }
 }

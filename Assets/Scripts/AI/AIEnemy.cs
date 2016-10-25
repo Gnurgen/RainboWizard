@@ -78,7 +78,7 @@ public class AIEnemy : MonoBehaviour
             ability.range = attackDistance;
         }
         else if (enemyType == EnemyType.Ranged) {
-            attackDistance = chaseDistance / 4;
+            attackDistance = 10f;
             var ability = transform.gameObject.AddComponent<FireballAbility>();
             ability.damage = enemyDamage;
             ability.cooldown = enemyCooldown;
@@ -92,7 +92,7 @@ public class AIEnemy : MonoBehaviour
             attackDistance = 0;
         }
 
-        wiggleDistance = attackDistance / 3;
+        wiggleDistance = attackDistance / 4;
 
         //Components
         controller = GetComponent<CharacterController>();

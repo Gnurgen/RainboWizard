@@ -81,8 +81,8 @@ public class AIBoss : MonoBehaviour
             attackDistance = chaseDistance / 4;
 
             massFireball = transform.gameObject.AddComponent<MassFireballAbility>();
-            massFireball.damage = bossDamage * 5f;
-            massFireball.cooldown = bossCooldown;
+            massFireball.damage = bossDamage;
+            massFireball.cooldown = bossCooldown * 2;
             massFireball.speed = bossSpeed;
             massFireball.range = attackDistance;
             massFireball.prefab = Resources.Load("Fireball") as GameObject;
@@ -92,15 +92,15 @@ public class AIBoss : MonoBehaviour
             attackDistance = chaseDistance/4;
 
             massFireball = transform.gameObject.AddComponent<MassFireballAbility>();
-            massFireball.damage = bossDamage * 5f;
-            massFireball.cooldown = bossCooldown;
+            massFireball.damage = bossDamage;
+            massFireball.cooldown = bossCooldown * 2;
             massFireball.speed = bossSpeed;
             massFireball.range = attackDistance;
             massFireball.prefab = Resources.Load("Fireball") as GameObject;
 
             icemine = transform.gameObject.AddComponent<IceMineAbility>();
             icemine.damage = bossDamage;
-            icemine.cooldown = bossCooldown;
+            icemine.cooldown = bossCooldown * 2;
             icemine.delay = bossSpeed;
             icemine.explosionRange = bossAoE;
             icemine.range = attackDistance;
@@ -111,15 +111,15 @@ public class AIBoss : MonoBehaviour
             attackDistance = chaseDistance / 4;
 
             massFireball = transform.gameObject.AddComponent<MassFireballAbility>();
-            massFireball.damage = bossDamage * 5f;
-            massFireball.cooldown = bossCooldown;
+            massFireball.damage = bossDamage;
+            massFireball.cooldown = bossCooldown * 2;
             massFireball.speed = bossSpeed;
             massFireball.range = attackDistance;
             massFireball.prefab = Resources.Load("Fireball") as GameObject;
 
             icemine = transform.gameObject.AddComponent<IceMineAbility>();
             icemine.damage = bossDamage;
-            icemine.cooldown = bossCooldown;
+            icemine.cooldown = bossCooldown * 2;
             icemine.delay = bossSpeed;
             icemine.explosionRange = bossAoE;
             icemine.range = attackDistance;

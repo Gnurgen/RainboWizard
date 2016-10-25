@@ -5,10 +5,10 @@
 		_MainTex ("Texture", 2D) = "white" {}
 		_Speed ("Speed", float) = 1
 		_Colors ("Colors", float) = 2
-		_Fireball ("Fireball", color) = (1,1,1,1)
-		_MassFireball ("Mass Fireball", color) = (1,1,1,1)
-		_IceMine ("Ice Mine", color) = (1,1,1,1)
-		_Teleport ("Teleport", color) = (1,1,1,1)
+		_Fireball ("Fireball", color) = (1,1,1,0)
+		_MassFireball ("Mass Fireball", color) = (1,1,1,0)
+		_IceMine ("Ice Mine", color) = (1,1,1,0)
+		_Teleport ("Teleport", color) = (1,1,1,0)
 	}
 	SubShader
 	{
@@ -52,7 +52,7 @@
 			{
 				// This is where the "magic" happens
 				fixed4 col = tex2D(_MainTex, i.uv);
-				fixed4 blend = fixed4(1,1,1,1);
+				fixed4 blend = fixed4(1,1,1,0);
 				//return fixed4((col.x + _Time.y) % _Speed / _Speed, (col.y + _Time.y) % _Speed / _Speed, (col.z + _Time.y) % _Speed / _Speed, 0);
 				float choose = (_Time.y * _Speed) % _Colors;
 				if(choose >= 0 && choose <= 1){
